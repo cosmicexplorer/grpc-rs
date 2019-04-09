@@ -319,7 +319,7 @@ impl<Req: Debug> Sink for StreamingCallSink<Req> {
 
     fn start_send(&mut self, (msg, flags): Self::SinkItem) -> StartSend<Self::SinkItem, Error> {
       {
-        debug!("in start_send() for StreamingCallSink: {:?}, {:?}", msg, flags);
+        debug!("in start_send() for StreamingCallSink: (msg not rendered), {:?}", flags);
             let mut call = self.call.lock();
             call.check_alive()?;
         }
