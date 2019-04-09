@@ -52,9 +52,11 @@ impl Batch {
     fn read_one_msg(&mut self, success: bool) {
         let task = {
             let mut guard = self.inner.lock();
-            if success {
+          if success {
+            debug!("succesfully read message!");
                 guard.set_result(Ok(self.ctx.recv_message()))
-            } else {
+          } else {
+            debug!("failed to read one message!");
                 // rely on C core to handle the failed read (e.g. deliver approriate
                 // statusCode on the clientside).
                 guard.set_result(Ok(None))
@@ -68,12 +70,15 @@ impl Batch {
             let mut guard = self.inner.lock();
             if succeed {
                 let status = self.ctx.rpc_status();
-                if status.status == RpcStatusCode::Ok {
+              if status.status == RpcStatusCode::Ok {
+                debug!("successful finished response!");
                     guard.set_result(Ok(None))
-                } else {
+              } else {
+                debug!("failed finished response!");
                     guard.set_result(Err(Error::RpcFailure(status)))
                 }
             } else {
+              debug!("remote stopped!!!");
                 guard.set_result(Err(Error::RemoteStopped))
             }
         };
@@ -84,9 +89,11 @@ impl Batch {
         let task = {
             let mut guard = self.inner.lock();
             let status = self.ctx.rpc_status();
-            if status.status == RpcStatusCode::Ok {
+          if status.status == RpcStatusCode::Ok {
+            debug!("successful unary response!");
                 guard.set_result(Ok(self.ctx.recv_message()))
-            } else {
+          } else {
+            debug!("failed unary response!");
                 guard.set_result(Err(Error::RpcFailure(status)))
             }
         };
@@ -128,9 +135,11 @@ impl Shutdown {
     pub fn resolve(self, success: bool) {
         let task = {
             let mut guard = self.inner.lock();
-            if success {
+          if success {
+            debug!("successful shutdown!");
                 guard.set_result(Ok(()))
-            } else {
+          } else {
+            debug!("shutdown failed!");
                 guard.set_result(Err(Error::ShutdownFailed))
             }
         };

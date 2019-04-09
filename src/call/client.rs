@@ -319,7 +319,7 @@ impl<Req: Debug> Sink for StreamingCallSink<Req> {
 
     fn start_send(&mut self, (msg, flags): Self::SinkItem) -> StartSend<Self::SinkItem, Error> {
       {
-        eprintln!("in start_send() for StreamingCallSink: {:?}, {:?}", msg, flags);
+        debug!("in start_send() for StreamingCallSink: {:?}, {:?}", msg, flags);
             let mut call = self.call.lock();
             call.check_alive()?;
         }
@@ -336,7 +336,7 @@ impl<Req: Debug> Sink for StreamingCallSink<Req> {
 
     fn poll_complete(&mut self) -> Poll<(), Error> {
       {
-        eprintln!("in poll_complete() for StreamingCallSink");
+        debug!("in poll_complete() for StreamingCallSink");
             let mut call = self.call.lock();
             call.check_alive()?;
         }
