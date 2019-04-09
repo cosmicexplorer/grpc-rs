@@ -69,8 +69,9 @@ fn new_inner<T>() -> Arc<Inner<T>> {
 ///
 /// If the future is polled successfully, this function will return None.
 /// Not implemented as method as it's only for internal usage.
-pub fn check_alive<T>(f: &CqFuture<T>) -> Result<()> {
-    let guard = f.inner.lock();
+pub fn check_alive<T: Debug>(f: &CqFuture<T>) -> Result<()> {
+  let guard = f.inner.lock();
+  eprintln!("guard.result: {:?}", guard.result);
     match guard.result {
         None => Ok(()),
         Some(Err(Error::RpcFailure(ref status))) => {

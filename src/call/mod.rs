@@ -536,7 +536,7 @@ impl StreamingBase {
 }
 
 /// Flags for write operations.
-#[derive(Default, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy)]
 pub struct WriteFlags {
     flags: u32,
 }

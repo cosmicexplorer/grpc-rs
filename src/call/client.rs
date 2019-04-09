@@ -11,6 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use std::fmt::Debug;
 use std::ptr;
 use std::sync::Arc;
 use std::time::Duration;
@@ -312,12 +313,13 @@ impl<Req> StreamingCallSink<Req> {
     }
 }
 
-impl<Req> Sink for StreamingCallSink<Req> {
+impl<Req: Debug> Sink for StreamingCallSink<Req> {
     type SinkItem = (Req, WriteFlags);
     type SinkError = Error;
 
     fn start_send(&mut self, (msg, flags): Self::SinkItem) -> StartSend<Self::SinkItem, Error> {
-        {
+      {
+        eprintln!("in start_send() for StreamingCallSink: {:?}, {:?}", msg, flags);
             let mut call = self.call.lock();
             call.check_alive()?;
         }
@@ -333,7 +335,8 @@ impl<Req> Sink for StreamingCallSink<Req> {
     }
 
     fn poll_complete(&mut self) -> Poll<(), Error> {
-        {
+      {
+        eprintln!("in poll_complete() for StreamingCallSink");
             let mut call = self.call.lock();
             call.check_alive()?;
         }

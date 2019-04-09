@@ -235,7 +235,8 @@ impl<T> Stream for RequestStream<T> {
     type Error = Error;
 
     fn poll(&mut self) -> Poll<Option<T>, Error> {
-        {
+      {
+        eprintln!("in poll() for RequestStream");
             let mut call = self.call.lock();
             call.check_alive()?;
         }
